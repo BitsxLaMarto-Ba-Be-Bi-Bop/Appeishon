@@ -14,14 +14,17 @@ class StorageService {
   }
 
   Future<void> deleteData(String key) async {
+    print("DELETING DATA $key");
     await storage.delete(key: key);
   }
 
   Future<String?> getSessionToken() async {
+    print("GETTING SESSION TOKEN");
     return await storage.read(key: SESSION_KEY);
   }
 
   Future<void> saveSessionToken(String value) async {
+    print("SAVING SESSION TOKEN $value");
     await storage.write(key: SESSION_KEY, value: value);
   }
 }

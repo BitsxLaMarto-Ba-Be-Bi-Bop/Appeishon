@@ -3,6 +3,7 @@ import 'package:fibro_pred/Activities/HomeActivity.dart';
 import 'package:fibro_pred/Activities/MapActivity.dart';
 import 'package:fibro_pred/Utils/AccessNavigator.dart';
 import 'package:fibro_pred/Utils/CustomColors.dart';
+import 'package:fibro_pred/Utils/StorageService.dart';
 import 'package:flutter/material.dart';
 
 import 'LoginActivity.dart';
@@ -38,6 +39,7 @@ class MainPageState extends State<MainPage>
   }
 
   void _logout() {
+    StorageService().deleteData("sessionToken");
     // Add logout functionality here
     AccessNavigator.goToAndReplace(context, Loginactivity());
   }

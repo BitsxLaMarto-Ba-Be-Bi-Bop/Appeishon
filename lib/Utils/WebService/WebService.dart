@@ -31,6 +31,7 @@ class WebService {
 
   Future<http.Response> post(
       String endpoint, Map<String, dynamic> body, bool needSession) async {
+    print("URL TO REQUEST: $baseUrl$endpoint");
     final url = Uri.parse('$baseUrl$endpoint');
     final headers = await _getHeaders(needSession);
     return await http.post(url, headers: headers, body: jsonEncode(body));

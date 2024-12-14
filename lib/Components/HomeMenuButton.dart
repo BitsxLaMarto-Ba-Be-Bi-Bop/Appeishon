@@ -73,6 +73,7 @@ class _HomeMenuButtonState extends State<HomeMenuButton> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
+                    textAlign: TextAlign.center,
                     widget.text,
                     style: TextStyle(
                         fontWeight: FontWeight.bold,

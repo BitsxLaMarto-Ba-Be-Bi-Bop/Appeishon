@@ -17,30 +17,54 @@ class DialogService {
   }) async {
     return showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: body,
-          actions: <Widget>[
-            Custombutton(
-                shadow: false,
-                color: Colors.transparent,
-                textColor: CustomColors.primary,
-                text: cancelText,
-                onPress: () {
-                  if (onCancel != null) {
-                    onCancel();
-                  }
-                  Navigator.of(context).pop();
-                }),
-            Custombutton(
-                text: acceptText,
-                onPress: () {
-                  onAccept();
-                  Navigator.of(context).pop();
-                })
-          ],
+        return Dialog(
+          insetPadding: EdgeInsets.symmetric(horizontal: 16), // Margen lateral
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            padding: EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (title.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Text(title),
+                  ),
+                body,
+                SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Custombutton(
+                      shadow: false,
+                      color: Colors.transparent,
+                      textColor: CustomColors.primary,
+                      text: cancelText,
+                      onPress: () {
+                        if (onCancel != null) {
+                          onCancel();
+                        }
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    SizedBox(width: 8),
+                    Custombutton(
+                      textXPadding: 16,
+                      textYPadding: -4,
+                      text: acceptText,
+                      onPress: () {
+                        onAccept();
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
         );
       },
     );

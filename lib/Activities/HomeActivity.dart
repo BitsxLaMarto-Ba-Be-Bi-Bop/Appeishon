@@ -1,7 +1,17 @@
+import 'package:fibro_pred/Activities/MapPage.dart';
+import 'package:fibro_pred/Activities/PredictionsPage.dart';
+import 'package:fibro_pred/Components/CustomTextInput.dart';
 import 'package:fibro_pred/Components/HomeMenuButton.dart';
 import 'package:flutter/material.dart';
 
+import '../Components/CustomDateTimeInput.dart';
+import '../Components/CustomSelectorInput.dart';
+import '../Dialogs/AddCitaDialog.dart';
+import '../Utils/AccessNavigator.dart';
+import '../Utils/CustomColors.dart';
 import '../Utils/DialogService.dart';
+import 'CitesListActivity.dart';
+import 'MapActivity.dart';
 
 class Homeactivity extends StatefulWidget {
   const Homeactivity({super.key});
@@ -11,6 +21,10 @@ class Homeactivity extends StatefulWidget {
 }
 
 class _HomeactivityState extends State<Homeactivity> {
+  GlobalKey<AddCitaDialogState> addCitaDialogKey =
+      GlobalKey<AddCitaDialogState>();
+  TextEditingController dateTimeAddCitaController = TextEditingController();
+  TextEditingController metgeController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -25,9 +39,10 @@ class _HomeactivityState extends State<Homeactivity> {
               text: "Demana Cita",
               onPress: () {
                 DialogService(context).showCustomDialog(
-                    title: "Confirm Action",
-                    body: Text("Are you sure you want to proceed?"),
+                    title: "Demana Cita",
+                    body: AddCitaDialog(key: addCitaDialogKey),
                     onAccept: () {
+                      addCitaDialogKey.currentState!.saveCita();
                       print("Accepted");
                     },
                     onCancel: () {
@@ -38,22 +53,28 @@ class _HomeactivityState extends State<Homeactivity> {
               icon: Icons.note_add,
             ),
             HomeMenuButton(
-              text: "test",
-              onPress: () {},
-              color: Colors.yellow,
-              icon: Icons.abc,
+              text: "Les Meves Cites",
+              onPress: () {
+                AccessNavigator.goTo(context, CitesListActivity());
+              },
+              color: Colors.purple,
+              icon: Icons.event_note,
             ),
             HomeMenuButton(
-              text: "test",
-              onPress: () {},
-              color: Colors.blue,
-              icon: Icons.abc,
+              text: "Predicció",
+              onPress: () {
+                AccessNavigator.goTo(context, PredictionsPage());
+              },
+              color: CustomColors.primary,
+              icon: Icons.question_mark,
             ),
             HomeMenuButton(
-              text: "test",
-              onPress: () {},
+              text: "Mapa",
+              onPress: () {
+                AccessNavigator.goTo(context, MapPage());
+              },
               color: Colors.red,
-              icon: Icons.abc,
+              icon: Icons.map,
             ),
           ],
         )),

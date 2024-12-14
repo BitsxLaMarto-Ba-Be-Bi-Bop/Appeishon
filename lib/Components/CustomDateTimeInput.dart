@@ -1,19 +1,27 @@
+import 'dart:convert';
+
+import 'package:fibro_pred/Utils/WebService/WebService.dart';
 import 'package:flutter/material.dart';
 import 'package:fibro_pred/Utils/CustomColors.dart';
 import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
+
+import '../Utils/WebService/WebServicesVariables.dart';
 
 class CustomDateTimeInput extends StatefulWidget {
   final String placeholder;
   final TextEditingController controller;
   final String label;
   final IconData? icon;
+  final bool isDateTime;
 
   const CustomDateTimeInput(
       {Key? key,
       required this.placeholder,
       this.label = "",
       required this.controller,
-      this.icon})
+      this.icon,
+      this.isDateTime = false})
       : super(key: key);
 
   @override
@@ -21,6 +29,12 @@ class CustomDateTimeInput extends StatefulWidget {
 }
 
 class _CustomDateTimeInputState extends State<CustomDateTimeInput> {
+  @override
+  void initState() {
+    super.initState();
+    initializeDateFormatting('es_ES');
+  }
+
   Future<void> _selectDateTime(BuildContext context) async {
     DateTime? selectedDate = await showDatePicker(
       context: context,
@@ -30,11 +44,28 @@ class _CustomDateTimeInputState extends State<CustomDateTimeInput> {
     );
 
     if (selectedDate != null) {
-      DateTime finalDateTime =
-          DateTime(selectedDate.year, selectedDate.month, selectedDate.day);
-      String formattedDate =
-          DateFormat('yyyy-MM-dd', 'es_ES').format(finalDateTime);
-      widget.controller.text = formattedDate;
+      if (widget.isDateTime) {
+        TimeOfDay? selectedTime = await showTimePicker(
+          context: context,
+          initialTime: TimeOfDay.now(),
+        );
+
+        if (selectedTime != null) {
+          DateTime finalDateTime = DateTime(
+            selectedDate.year,
+            selectedDate.month,
+            selectedDate.day,
+            selectedTime.hour,
+            selectedTime.minute,
+          );
+          String formattedDate =
+              DateFormat('dd-MM-yyyy HH:mm').format(finalDateTime);
+          widget.controller.text = formattedDate;
+        }
+      } else {
+        String formattedDate = DateFormat('dd-MM-yyyy').format(selectedDate);
+        widget.controller.text = formattedDate;
+      }
     }
   }
 
@@ -44,7 +75,10 @@ class _CustomDateTimeInputState extends State<CustomDateTimeInput> {
       child: TextFormField(
         controller: widget.controller,
         readOnly: true,
-        onTap: () => _selectDateTime(context),
+        onTap: () async {
+          FocusScope.of(context).unfocus();
+          await _selectDateTime(context);
+        },
         decoration: InputDecoration(
           floatingLabelBehavior: FloatingLabelBehavior.always,
           prefixIcon: widget.icon != null

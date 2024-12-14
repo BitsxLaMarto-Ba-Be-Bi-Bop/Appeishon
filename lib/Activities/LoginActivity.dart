@@ -1,14 +1,19 @@
+import 'dart:convert';
+
 import 'package:fibro_pred/Activities/MainPage.dart';
 import 'package:fibro_pred/Components/CustomButton.dart';
 import 'package:fibro_pred/Components/CustomTextInput.dart';
 import 'package:fibro_pred/Utils/AccessNavigator.dart';
 import 'package:fibro_pred/Utils/CustomColors.dart';
+import 'package:fibro_pred/Utils/StorageService.dart';
 import 'package:fibro_pred/Utils/ToastService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../Utils/WebService/AuthService.dart';
+import '../Utils/WebService/WebService.dart';
+import '../Utils/WebService/WebServicesVariables.dart';
 import 'RegisterActivity.dart';
 
 class Loginactivity extends StatefulWidget {
@@ -22,6 +27,19 @@ class _LoginactivityState extends State<Loginactivity> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool isLoading = false;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  checkSession() async {
+    String? token = await StorageService().getSessionToken();
+    if (token != null || token != "") {
+      AccessNavigator.goToAndReplace(context, MainPage());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,16 +91,29 @@ class _LoginactivityState extends State<Loginactivity> {
                             text: "Entrar",
                             onPress: () async {
                               isLoading = true;
-                              await AuthService.login().then((value) {
+                              WebService(baseUrl: WebServicesVariables.BASE_URL)
+                                  .post(
+                                      "login",
+                                      {
+                                        "mail": emailController.text,
+                                        "password": passwordController.text
+                                      },
+                                      false)
+                                  .then((value) {
                                 if (value.statusCode != 200) {
+                                  print(value.body);
+
                                   ToastService.showError(
                                       message: "Login Failed!");
                                 } else {
+                                  print(value.body);
+                                  StorageService().saveSessionToken(
+                                      jsonDecode(value.body)["token"]);
                                   AccessNavigator.goToAndReplace(
                                       context, MainPage());
                                 }
-                                isLoading = false;
                               });
+                              isLoading = false;
                             }),
                   ),
                 ),

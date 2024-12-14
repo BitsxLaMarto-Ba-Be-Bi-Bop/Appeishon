@@ -32,6 +32,11 @@ dependencies:
   http:
   fluttertoast:
   flutter_svg:
+  flutter_map: ^4.0.0
+  latlong2: ^0.8.1
+
+  permission_handler:
+
   intl:
   flutter:
     sdk: flutter
