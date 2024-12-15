@@ -23,17 +23,17 @@ class _PredictionsPageState extends State<PredictionsPage> {
         child: ListView(
           children: [
             PredictionCard(
-              title: 'Weather Forecast',
+              title: 'Mortalitat',
               description: '',
               percent: 75,
             ),
             PredictionCard(
-              title: 'Stock Market',
+              title: 'Fibrosi Pulmonar ideopàtica',
               description: '',
               percent: 50,
             ),
             PredictionCard(
-              title: 'Sports Match',
+              title: 'Necessitat de transplant',
               description: '',
               percent: 25,
             ),
